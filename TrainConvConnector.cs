@@ -657,7 +657,8 @@ class TrainConvConnector: Form
 		{
 			TrainCrewInput.SetNotch(convertedPower, convertedBrake);
 		}
-		trainCrewPowerValueLabel.Text = convertedPower > 0 ? string.Format("P{0}", convertedPower) : "N";
+		trainCrewPowerValueLabel.Text = convertedPower > 0 ? string.Format("P{0}", convertedPower) :
+			(convertedPower < 0 ? string.Format("HB{0}", -convertedPower) : "N");
 		// TODO: 車種に応じた表示を行う
 		trainCrewBrakeValueLabel.Text = convertedBrake.ToString();
 
