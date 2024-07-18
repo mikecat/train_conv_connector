@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using Microsoft.Win32;
 
 class TrainConvConnector: Form
 {
@@ -63,6 +64,38 @@ class TrainConvConnector: Form
 	private RadioButton configForATCSpeedLimitWithoutNoticeRadioButton;
 
 	private Label denConvConfigurationGuideLabel;
+
+	private static readonly string RegistrySubKey = "Software\\MikeCAT\\TrainConvConnector";
+	private static readonly string RegistryPath = "HKEY_CURRENT_USER\\" + RegistrySubKey;
+
+	private static readonly string LanguageValueName = "Language";
+	private static readonly string LanguageJapaneseValue = "Japanese";
+	private static readonly string LanguageEnglishValue = "English";
+
+	private static readonly string OperationModeValueName = "OperationMode";
+	private static readonly string OperationModeAutoValue = "Auto";
+	private static readonly string OperationMode4000Value = "4000";
+	private static readonly string OperationMode3020Value = "3020";
+	private static readonly string OperationModeOtherValue = "Other";
+
+	private static readonly string ConfigFor4000ValueName = "4000Mode";
+	private static readonly string ConfigFor4000NoHoldingValue = "NoHolding";
+	private static readonly string ConfigFor4000UseHoldingValue = "UseHolding";
+
+	private static readonly string ConfigFor3020ValueName = "3020Mode";
+	private static readonly string ConfigFor3020NoHolding8Value = "NoHolding8";
+	private static readonly string ConfigFor3020NoHolding7Value = "NoHolding7";
+	private static readonly string ConfigFor3020UseHolding7Value = "UseHolding7";
+
+	private static readonly string ConfigForOtherValueName = "OtherCarModelMode";
+	private static readonly string ConfigForOtherNoHoldingValue = "NoHolding";
+	private static readonly string ConfigForOtherUseHoldingValue = "UseHolding";
+
+	private static readonly string ConfigForATCValueName = "ATCMode";
+	private static readonly string ConfigForATCATSValue = "ATS";
+	private static readonly string ConfigForATCRawATSValue = "RawATS";
+	private static readonly string ConfigForATCSpeedLimitValue = "SpeedLimit";
+	private static readonly string ConfigForATCSpeedLimitWithoutNoticeValue = "SpeedLimitWithoutNotice";
 
 	private Point GetGridPoint(float x, float y, bool useMenuOffset)
 	{
@@ -263,11 +296,141 @@ class TrainConvConnector: Form
 
 	private void LoadHandler(object sender, EventArgs e)
 	{
-		languageMenuJapanese.Checked = true;
-		uiText = new JapaneseUIText();
+		RegistryKey regKey = null;
+		try
+		{
+			regKey = Registry.CurrentUser.CreateSubKey(RegistrySubKey);
+
+			object language = regKey.GetValue(LanguageValueName);
+			if (LanguageEnglishValue.CompareTo(language) == 0)
+			{
+				languageMenuEnglish.Checked = true;
+			}
+
+			object operationMode = regKey.GetValue(OperationModeValueName);
+			if (OperationMode4000Value.CompareTo(operationMode) == 0)
+			{
+				operationMode4000RadioButton.Checked = true;
+			}
+			else if (OperationMode3020Value.CompareTo(operationMode) == 0)
+			{
+				operationMode3020RadioButton.Checked = true;
+			}
+			else if (OperationModeOtherValue.CompareTo(operationMode) == 0)
+			{
+				operationModeOtherRadioButton.Checked = true;
+			}
+			else
+			{
+				operationModeAutoRadioButton.Checked = true;
+			}
+
+			object configFor4000 = regKey.GetValue(ConfigFor4000ValueName);
+			if (ConfigFor4000UseHoldingValue.CompareTo(configFor4000) == 0)
+			{
+				configFor4000UseHoldingRadioButton.Checked = true;
+			}
+			else
+			{
+				configFor4000NoHoldingRadioButton.Checked = true;
+			}
+
+			object configFor3020 = regKey.GetValue(ConfigFor3020ValueName);
+			if (ConfigFor3020NoHolding7Value.CompareTo(configFor3020) == 0)
+			{
+				configFor3020NoHolding7RadioButton.Checked = true;
+			}
+			else if (ConfigFor3020UseHolding7Value.CompareTo(configFor3020) == 0)
+			{
+				configFor3020UseHolding7RadioButton.Checked = true;
+			}
+			else
+			{
+				configFor3020NoHolding8RadioButton.Checked = true;
+			}
+
+			object configForOther = regKey.GetValue(ConfigForOtherValueName);
+			if (ConfigForOtherNoHoldingValue.CompareTo(configForOther) == 0)
+			{
+				configForOtherNoHoldingRadioButton.Checked = true;
+			}
+			else
+			{
+				configForOtherUseHoldingRadioButton.Checked = true;
+			}
+
+			object atcMode = regKey.GetValue(ConfigForATCValueName);
+			if (ConfigForATCRawATSValue.CompareTo(atcMode) == 0)
+			{
+				configForATCRawATSRadioButton.Checked = true;
+			}
+			else if (ConfigForATCSpeedLimitValue.CompareTo(atcMode) == 0)
+			{
+				configForATCSpeedLimitRadioButton.Checked = true;
+			}
+			else if (ConfigForATCSpeedLimitWithoutNoticeValue.CompareTo(atcMode) == 0)
+			{
+				configForATCSpeedLimitWithoutNoticeRadioButton.Checked = true;
+			}
+			else
+			{
+				configForATCATSRadioButton.Checked = true;
+			}
+		}
+		catch (Exception)
+		{
+			// 何もしない (握りつぶす)
+		}
+		finally
+		{
+			try
+			{
+				if (regKey != null) regKey.Close();
+			}
+			catch (Exception)
+			{
+				// 何もしない (握りつぶす)
+			}
+		}
+		if (languageMenuEnglish.Checked)
+		{
+			uiText = new EnglishUIText();
+		}
+		else
+		{
+			languageMenuJapanese.Checked = true;
+			uiText = new JapaneseUIText();
+		}
 		SetControlTexts();
 		languageMenuJapanese.Click += LanguageChangeHandler;
 		languageMenuEnglish.Click += LanguageChangeHandler;
+		operationModeAutoRadioButton.Click += OperationModeChangeHandler;
+		operationMode4000RadioButton.Click += OperationModeChangeHandler;
+		operationMode3020RadioButton.Click += OperationModeChangeHandler;
+		operationModeOtherRadioButton.Click += OperationModeChangeHandler;
+		configFor4000NoHoldingRadioButton.Click += ConfigFor4000ChangeHandler;
+		configFor4000UseHoldingRadioButton.Click += ConfigFor4000ChangeHandler;
+		configFor3020NoHolding8RadioButton.Click += ConfigFor3020ChangeHandler;
+		configFor3020NoHolding7RadioButton.Click += ConfigFor3020ChangeHandler;
+		configFor3020UseHolding7RadioButton.Click += ConfigFor3020ChangeHandler;
+		configForOtherNoHoldingRadioButton.Click += ConfigForOtherChangeHandler;
+		configForOtherUseHoldingRadioButton.Click += ConfigForOtherChangeHandler;
+		configForATCATSRadioButton.Click += ConfigForATCChangeHandler;
+		configForATCRawATSRadioButton.Click += ConfigForATCChangeHandler;
+		configForATCSpeedLimitRadioButton.Click += ConfigForATCChangeHandler;
+		configForATCSpeedLimitWithoutNoticeRadioButton.Click += ConfigForATCChangeHandler;
+	}
+
+	private void SetRegValueAndIgnoreExceptions(string valueName, object value)
+	{
+		try
+		{
+			Registry.SetValue(RegistryPath, valueName, value);
+		}
+		catch (Exception)
+		{
+			// 何もしない (握りつぶす)
+		}
 	}
 
 	private void LanguageChangeHandler(object sender, EventArgs e)
@@ -277,17 +440,69 @@ class TrainConvConnector: Form
 			uiText = new JapaneseUIText();
 			languageMenuJapanese.Checked = true;
 			languageMenuEnglish.Checked = false;
+			SetRegValueAndIgnoreExceptions(LanguageValueName, LanguageJapaneseValue);
 		}
 		else if (sender == languageMenuEnglish)
 		{
 			uiText = new EnglishUIText();
 			languageMenuJapanese.Checked = false;
 			languageMenuEnglish.Checked = true;
+			SetRegValueAndIgnoreExceptions(LanguageValueName, LanguageEnglishValue);
 		}
 		else
 		{
 			return;
 		}
 		SetControlTexts();
+	}
+
+	private void OperationModeChangeHandler(object sender, EventArgs e)
+	{
+		string newMode;
+		if (sender == operationModeAutoRadioButton) newMode = OperationModeAutoValue;
+		else if (sender == operationMode4000RadioButton) newMode = OperationMode4000Value;
+		else if (sender == operationMode3020RadioButton) newMode = OperationMode3020Value;
+		else if (sender == operationModeOtherRadioButton) newMode = OperationModeOtherValue;
+		else return;
+		SetRegValueAndIgnoreExceptions(OperationModeValueName, newMode);
+	}
+
+	private void ConfigFor4000ChangeHandler(object sender, EventArgs e)
+	{
+		string newMode;
+		if (sender == configFor4000NoHoldingRadioButton) newMode = ConfigFor4000NoHoldingValue;
+		else if (sender == configFor4000UseHoldingRadioButton) newMode = ConfigFor4000UseHoldingValue;
+		else return;
+		SetRegValueAndIgnoreExceptions(ConfigFor4000ValueName, newMode);
+	}
+
+	private void ConfigFor3020ChangeHandler(object sender, EventArgs e)
+	{
+		string newMode;
+		if (sender == configFor3020NoHolding8RadioButton) newMode = ConfigFor3020NoHolding8Value;
+		else if (sender == configFor3020NoHolding7RadioButton) newMode = ConfigFor3020NoHolding7Value;
+		else if (sender == configFor3020UseHolding7RadioButton) newMode = ConfigFor3020UseHolding7Value;
+		else return;
+		SetRegValueAndIgnoreExceptions(ConfigFor3020ValueName, newMode);
+	}
+
+	private void ConfigForOtherChangeHandler(object sender, EventArgs e)
+	{
+		string newMode;
+		if (sender == configForOtherNoHoldingRadioButton) newMode = ConfigForOtherNoHoldingValue;
+		else if (sender == configForOtherUseHoldingRadioButton) newMode = ConfigForOtherUseHoldingValue;
+		else return;
+		SetRegValueAndIgnoreExceptions(ConfigForOtherValueName, newMode);
+	}
+
+	private void ConfigForATCChangeHandler(object sender, EventArgs e)
+	{
+		string newMode;
+		if (sender == configForATCATSRadioButton) newMode = ConfigForATCATSValue;
+		else if (sender == configForATCRawATSRadioButton) newMode = ConfigForATCRawATSValue;
+		else if (sender == configForATCSpeedLimitRadioButton) newMode = ConfigForATCSpeedLimitValue;
+		else if (sender == configForATCSpeedLimitWithoutNoticeRadioButton) newMode = ConfigForATCSpeedLimitWithoutNoticeValue;
+		else return;
+		SetRegValueAndIgnoreExceptions(ConfigForATCValueName, newMode);
 	}
 }
