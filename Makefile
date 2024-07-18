@@ -8,7 +8,8 @@ OPTIONS= \
 SOURCES= \
 	TrainConvConnector.cs \
 	UIText.cs \
-	JapaneseUIText.cs
+	JapaneseUIText.cs \
+	EnglishUIText.cs
 
 $(TARGET): $(SOURCES)
 	csc /out:$@ $(OPTIONS) $^

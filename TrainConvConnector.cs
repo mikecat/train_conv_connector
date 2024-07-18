@@ -12,7 +12,7 @@ class TrainConvConnector: Form
 	}
 
 	private const int gridSize = 22;
-	private UIText uiText = new JapaneseUIText();
+	private UIText uiText;
 
 	private MenuStrip mainMenu;
 	private ToolStripMenuItem languageMenu, languageMenuJapanese, languageMenuEnglish;
@@ -248,7 +248,7 @@ class TrainConvConnector: Form
 		configForOtherNoHoldingRadioButton = AddRadioButton(configForOtherBox, col1x, 1);
 		configForOtherUseHoldingRadioButton = AddRadioButton(configForOtherBox, col1x, 2);
 
-		const float col2xATC = 7;
+		const float col2xATC = 6;
 		configForATCBox = AddGroupBox(this, rightBoxX, 13.5f, rightBoxWidth, 3.5f, true);
 		configForATCATSRadioButton = AddRadioButton(configForATCBox, col1x, 1);
 		configForATCRawATSRadioButton = AddRadioButton(configForATCBox, col2xATC, 1);
@@ -258,6 +258,36 @@ class TrainConvConnector: Form
 		denConvConfigurationGuideLabel = AddLabel(this, 0.5f, 17.5f, true);
 
 		ResumeLayout();
+		Load += LoadHandler;
+	}
+
+	private void LoadHandler(object sender, EventArgs e)
+	{
+		languageMenuJapanese.Checked = true;
+		uiText = new JapaneseUIText();
+		SetControlTexts();
+		languageMenuJapanese.Click += LanguageChangeHandler;
+		languageMenuEnglish.Click += LanguageChangeHandler;
+	}
+
+	private void LanguageChangeHandler(object sender, EventArgs e)
+	{
+		if (sender == languageMenuJapanese)
+		{
+			uiText = new JapaneseUIText();
+			languageMenuJapanese.Checked = true;
+			languageMenuEnglish.Checked = false;
+		}
+		else if (sender == languageMenuEnglish)
+		{
+			uiText = new EnglishUIText();
+			languageMenuJapanese.Checked = false;
+			languageMenuEnglish.Checked = true;
+		}
+		else
+		{
+			return;
+		}
 		SetControlTexts();
 	}
 }
