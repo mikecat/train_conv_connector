@@ -3,6 +3,7 @@ class JapaneseUIText: UIText
 	public override string DenConvStatus { get { return "電車でＧｏ！コントローラー変換器の状態"; }}
 	public override string DenConvPowerName { get { return "マスコン"; }}
 	public override string DenConvBrakeName { get { return "ブレーキ"; }}
+	public override string DenConvBrakeRelease { get { return "解除"; }}
 	public override string DenConvATCName { get { return "ATC"; }}
 	public override string DenConvATCNoticeName { get { return "ATC予告"; }}
 
@@ -10,12 +11,16 @@ class JapaneseUIText: UIText
 	public override string TrainCrewPowerName { get { return "マスコン"; }}
 	public override string TrainCrewBrakeName { get { return "ブレーキ"; }}
 	public override string TrainCrewDoorCloseName { get { return "戸閉"; }}
+	public override string TrainCrewDoorCloseTrue { get { return "点"; }}
+	public override string TrainCrewDoorCloseFalse { get { return "滅"; }}
 	public override string TrainCrewCarModelName { get { return "車種"; }}
 	public override string TrainCrewSpeedName { get { return "速度"; }}
 	public override string TrainCrewSpeedLimitName { get { return "制限速度"; }}
 	public override string TrainCrewSpeedLimitNoticeName { get { return "制限速度予告"; }}
 	public override string TrainCrewATSName { get { return "ATS"; }}
 	public override string TrainCrewInGameName { get { return "ゲーム中？"; }}
+	public override string TrainCrewInGameTrue { get { return "はい"; }}
+	public override string TrainCrewInGameFalse { get { return "いいえ"; }}
 	public override string TrainCrewBCPressureName { get { return "BC圧力"; }}
 	public override string TrainCrewDistanceName { get { return "残り距離"; }}
 
@@ -46,5 +51,15 @@ class JapaneseUIText: UIText
 
 	public override string DenConvConfigurationGuide { get {
 		return "電車でＧｏ！コントローラー変換器では「プロ仕様-本格版/20040526」を選択してください。";
+	}}
+
+	public override string ErrorDialogTitle { get { return "エラー"; }}
+	public override string BeaconWindowCreationFailed { get {
+		return "連携用ウィンドウの作成に失敗しました。";
+	}}
+	public override string CommunicationMemoryAllocationFailed { get {
+		return "連携用メモリの確保に失敗しました。\n" +
+			"なぜか時々失敗することが知られています。\n" +
+			"お手数をおかけしますが、1回～数回起動しなおしてください。";
 	}}
 }

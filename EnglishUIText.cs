@@ -3,6 +3,7 @@ class EnglishUIText: UIText
 	public override string DenConvStatus { get { return "DenConv Status"; }}
 	public override string DenConvPowerName { get { return "Power"; }}
 	public override string DenConvBrakeName { get { return "Brake"; }}
+	public override string DenConvBrakeRelease { get { return "Release"; }}
 	public override string DenConvATCName { get { return "ATC"; }}
 	public override string DenConvATCNoticeName { get { return "ATC Notice"; }}
 
@@ -10,12 +11,16 @@ class EnglishUIText: UIText
 	public override string TrainCrewPowerName { get { return "Power"; }}
 	public override string TrainCrewBrakeName { get { return "Brake"; }}
 	public override string TrainCrewDoorCloseName { get { return "Door Closed"; }}
+	public override string TrainCrewDoorCloseTrue { get { return "Yes"; }}
+	public override string TrainCrewDoorCloseFalse { get { return "No"; }}
 	public override string TrainCrewCarModelName { get { return "Car Model"; }}
 	public override string TrainCrewSpeedName { get { return "Speed"; }}
 	public override string TrainCrewSpeedLimitName { get { return "Speet Limit"; }}
 	public override string TrainCrewSpeedLimitNoticeName { get { return "Limit Notice"; }}
 	public override string TrainCrewATSName { get { return "ATS"; }}
 	public override string TrainCrewInGameName { get { return "Playing?"; }}
+	public override string TrainCrewInGameTrue { get { return "Yes"; }}
+	public override string TrainCrewInGameFalse { get { return "No"; }}
 	public override string TrainCrewBCPressureName { get { return "BC Pressure"; }}
 	public override string TrainCrewDistanceName { get { return "Distance"; }}
 
@@ -46,5 +51,16 @@ class EnglishUIText: UIText
 
 	public override string DenConvConfigurationGuide { get {
 		return "Please select \"Professional Shiyou-Authentic\" on DenConv.";
+	}}
+
+	public override string ErrorDialogTitle { get { return "Error"; }}
+	public override string BeaconWindowCreationFailed { get {
+		return "Failed to create a window for being found.";
+	}}
+	public override string CommunicationMemoryAllocationFailed { get {
+		return "Failed to allocate memory for communication.\n" +
+			"It is known that this sometimes happens.\n" +
+			"Please try launching one or several more times.\n" +
+			"Sorry for inconvenience.";
 	}}
 }

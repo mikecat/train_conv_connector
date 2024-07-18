@@ -3,13 +3,16 @@ OPTIONS= \
 	/target:winexe \
 	/optimize+ \
 	/warn:4 \
-	/codepage:65001
+	/codepage:65001 \
+	/reference:TrainCrewInput.dll
 
 SOURCES= \
 	TrainConvConnector.cs \
 	UIText.cs \
 	JapaneseUIText.cs \
-	EnglishUIText.cs
+	EnglishUIText.cs \
+	BeaconWindow.cs \
+	DenConvCommunicator.cs
 
 $(TARGET): $(SOURCES)
 	csc /out:$@ $(OPTIONS) $^

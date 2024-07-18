@@ -3,6 +3,7 @@ abstract class UIText
 	public abstract string DenConvStatus { get; }
 	public abstract string DenConvPowerName { get; }
 	public abstract string DenConvBrakeName { get; }
+	public abstract string DenConvBrakeRelease { get; }
 	public abstract string DenConvATCName { get; }
 	public abstract string DenConvATCNoticeName { get; }
 
@@ -10,12 +11,16 @@ abstract class UIText
 	public abstract string TrainCrewPowerName { get; }
 	public abstract string TrainCrewBrakeName { get; }
 	public abstract string TrainCrewDoorCloseName { get; }
+	public abstract string TrainCrewDoorCloseTrue { get; }
+	public abstract string TrainCrewDoorCloseFalse { get; }
 	public abstract string TrainCrewCarModelName { get; }
 	public abstract string TrainCrewSpeedName { get; }
 	public abstract string TrainCrewSpeedLimitName { get; }
 	public abstract string TrainCrewSpeedLimitNoticeName { get; }
 	public abstract string TrainCrewATSName { get; }
 	public abstract string TrainCrewInGameName { get; }
+	public abstract string TrainCrewInGameTrue { get; }
+	public abstract string TrainCrewInGameFalse { get; }
 	public abstract string TrainCrewBCPressureName { get; }
 	public abstract string TrainCrewDistanceName { get; }
 
@@ -45,4 +50,8 @@ abstract class UIText
 	public abstract string ConfigForATCSpeedLimitWithoutNotice { get; }
 
 	public abstract string DenConvConfigurationGuide { get; }
+
+	public abstract string ErrorDialogTitle { get; }
+	public abstract string BeaconWindowCreationFailed { get; }
+	public abstract string CommunicationMemoryAllocationFailed { get; }
 }

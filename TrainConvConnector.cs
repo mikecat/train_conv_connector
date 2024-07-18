@@ -1,7 +1,9 @@
 using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using TrainCrew;
 
 class TrainConvConnector: Form
 {
@@ -96,6 +98,12 @@ class TrainConvConnector: Form
 	private static readonly string ConfigForATCRawATSValue = "RawATS";
 	private static readonly string ConfigForATCSpeedLimitValue = "SpeedLimit";
 	private static readonly string ConfigForATCSpeedLimitWithoutNoticeValue = "SpeedLimitWithoutNotice";
+
+	private IntPtr hBeaconWnd;
+	private Timer conversionTimer;
+	private bool trainCrewInputEnabled = false;
+	private bool prevInGame = false;
+	private int prevConvertedPower = -99, prevConvertedBrake = -99;
 
 	private Point GetGridPoint(float x, float y, bool useMenuOffset)
 	{
@@ -292,6 +300,7 @@ class TrainConvConnector: Form
 
 		ResumeLayout();
 		Load += LoadHandler;
+		Shown += ShownHandler;
 	}
 
 	private void LoadHandler(object sender, EventArgs e)
@@ -504,5 +513,130 @@ class TrainConvConnector: Form
 		else if (sender == configForATCSpeedLimitWithoutNoticeRadioButton) newMode = ConfigForATCSpeedLimitWithoutNoticeValue;
 		else return;
 		SetRegValueAndIgnoreExceptions(ConfigForATCValueName, newMode);
+	}
+
+	private void ShownHandler(object sender, EventArgs e)
+	{
+		if (!DenConvCommunicator.Initialize())
+		{
+			DialogResult res = MessageBox.Show(
+				uiText.CommunicationMemoryAllocationFailed,
+				uiText.ErrorDialogTitle,
+				MessageBoxButtons.RetryCancel,
+				MessageBoxIcon.Exclamation
+			);
+			if (res == DialogResult.Retry)
+			{
+				Process.Start(Application.ExecutablePath);
+			}
+			this.Close();
+			return;
+		}
+		hBeaconWnd = BeaconWindow.CreateBeaconWindow(this.Handle);
+		if (IntPtr.Zero.Equals(hBeaconWnd))
+		{
+			MessageBox.Show(
+				uiText.BeaconWindowCreationFailed,
+				uiText.ErrorDialogTitle,
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Stop
+			);
+			this.Close();
+			return;
+		}
+		TrainCrewInput.Init();
+		trainCrewInputEnabled = true;
+		FormClosed += FormClosedHandler;
+		conversionTimer = new Timer();
+		conversionTimer.Interval = 15;
+		conversionTimer.Tick += ConversionTimerTickHandler;
+		conversionTimer.Start();
+	}
+
+	private void FormClosedHandler(object sender, EventArgs e)
+	{
+		if (conversionTimer != null) conversionTimer.Stop();
+		trainCrewInputEnabled = false;
+		TrainCrewInput.Dispose();
+	}
+
+	private static float StringToFloat(string str, float defaultValue)
+	{
+		float result;
+		if (Single.TryParse(str, out result))
+		{
+			return result;
+		}
+		else
+		{
+			return defaultValue;
+		}
+	}
+
+	private void ConversionTimerTickHandler(object sender, EventArgs e)
+	{
+		// 電車でＧｏ！コントローラー変換器から情報を取得する
+		DenConvCommunicator.PowerAndBrake pb = DenConvCommunicator.GetPowerAndBrake();
+		denConvPowerValueLabel.Text = string.Format("P{0}", pb.Power);
+		denConvBrakeValueLabel.Text = pb.Brake == 0 ?
+			string.Format("{0} (0)", uiText.DenConvBrakeRelease) :
+			string.Format(pb.Brake >= 9 ? "EB ({0})" : "B{0}", pb.Brake);
+
+		// TRAIN CREW から情報を取得する
+		if (!trainCrewInputEnabled) return;
+		TrainState trainState = TrainCrewInput.GetTrainState();
+		GameState gameState = TrainCrewInput.gameState;
+		bool doorClosed = trainState.AllClose;
+		bool carValid = trainState.CarStates.Count > 0;
+		string carModel = carValid ? trainState.CarStates[0].CarModel : "-";
+		float speed = trainState.Speed;
+		float speedLimit = trainState.speedLimit;
+		float speedLimitNotice = trainState.nextSpeedLimit;
+		string ats = trainState.ATS_Speed;
+		float atsValue = StringToFloat(ats, -1);
+		bool inGame = gameState.gameScreen == GameScreen.MainGame ||
+			gameState.gameScreen == GameScreen.MainGame_Pause;
+		float bcPressure = carValid ? trainState.CarStates[0].BC_Press : -1;
+		float distance = trainState.nextUIDistance;
+
+		// 取得した情報を画面に表示する
+		trainCrewDoorCloseValueLabel.Text = doorClosed ? uiText.TrainCrewDoorCloseTrue : uiText.TrainCrewDoorCloseFalse;
+		trainCrewCarModelValueLabel.Text = carValid ? carModel : "-";
+		trainCrewSpeedValueLabel.Text = speed.ToString();
+		trainCrewSpeedLimitValueLabel.Text = speedLimit.ToString();
+		trainCrewSpeedLimitNoticeValueLabel.Text = speedLimitNotice == -1 ? "-" : speedLimitNotice.ToString();
+		trainCrewATSValueLabel.Text = ats;
+		trainCrewInGameValueLabel.Text = inGame ? uiText.TrainCrewInGameTrue : uiText.TrainCrewInGameFalse;
+		trainCrewBCPressureValueLabel.Text = carValid ? bcPressure.ToString() : "-";
+		trainCrewDistanceValueLabel.Text = distance.ToString();
+
+		// 取得した情報を電車でＧｏ！コントローラー変換器に伝える
+		DenConvCommunicator.SetDoorClosed(doorClosed);
+		DenConvCommunicator.SetPressure(carValid ? bcPressure : 0);
+		DenConvCommunicator.SetDistance(distance);
+		DenConvCommunicator.SetSpeed(speed);
+		DenConvCommunicator.SetATCActive(inGame);
+		// TODO: ATC変換元の設定を反映する
+		DenConvCommunicator.SetATC(atsValue);
+		denConvATCValueLabel.Text = atsValue >= 0 ? atsValue.ToString() : "-";
+		denConvATCNoticeValueLabel.Text = "-";
+
+		// マスコンとブレーキの変換を行い、TRAIN CREW に伝える
+		// TODO: 車種の設定を反映する
+		int convertedPower = 0, convertedBrake = 0;
+		convertedPower = pb.Power > 5 ? 5 : pb.Power;
+		convertedBrake = pb.Brake >= 9 ? 8 : (pb.Brake == 8 ? 7 : pb.Brake);
+		if (convertedPower != prevConvertedPower || convertedBrake != prevConvertedBrake ||
+			(inGame && !prevInGame))
+		{
+			TrainCrewInput.SetNotch(convertedPower, convertedBrake);
+		}
+		trainCrewPowerValueLabel.Text = convertedPower > 0 ? string.Format("P{0}", convertedPower) : "N";
+		// TODO: 車種に応じた表示を行う
+		trainCrewBrakeValueLabel.Text = convertedBrake.ToString();
+
+		prevConvertedPower = convertedPower;
+		prevConvertedBrake = convertedBrake;
+		prevInGame = inGame;
 	}
 }
