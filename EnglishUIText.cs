@@ -29,6 +29,7 @@ class EnglishUIText: UIText
 	public override string OperationMode4000Name { get { return "4000 / 4000R"; }}
 	public override string OperationMode3020Name { get { return "3020"; }}
 	public override string OperationModeOtherName { get { return "Other"; }}
+	public override string ShinkansenTweakName { get { return "Tweak for Shinkansen"; }}
 
 	public override string ConfigFor4000 { get { return "Configuration for 4000 / 4000R"; }}
 	public override string ConfigFor4000NoHolding { get { return "B1～B7→B1～B7, B8→B7"; }}

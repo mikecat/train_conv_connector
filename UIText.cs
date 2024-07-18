@@ -29,6 +29,7 @@ abstract class UIText
 	public abstract string OperationMode4000Name { get; }
 	public abstract string OperationMode3020Name { get; }
 	public abstract string OperationModeOtherName { get; }
+	public abstract string ShinkansenTweakName { get; }
 
 	public abstract string ConfigFor4000 { get; }
 	public abstract string ConfigFor4000NoHolding { get; }

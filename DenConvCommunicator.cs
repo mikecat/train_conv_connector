@@ -86,12 +86,22 @@ class DenConvCommunicator
 		}
 	}
 
-	public static PowerAndBrake GetPowerAndBrake()
+	public static PowerAndBrake GetPowerAndBrake(bool shinkansenTweak = false)
 	{
 		Byte[] data = new Byte[2];
 		Marshal.Copy(PowerPtr, data, 0, 1);
 		Marshal.Copy(BrakePtr, data, 1, 1);
-		return new PowerAndBrake(data[0], data[1]);
+		if (shinkansenTweak)
+		{
+			byte brake = data[1];
+			if (brake == 7) brake = 6;
+			else if (brake == 8) brake = 7;
+			return new PowerAndBrake(data[0], brake);
+		}
+		else
+		{
+			return new PowerAndBrake(data[0], data[1]);
+		}
 	}
 
 	public static void SetDoorClosed(bool closed)

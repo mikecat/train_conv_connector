@@ -45,6 +45,7 @@ class TrainConvConnector: Form
 	private RadioButton operationMode4000RadioButton;
 	private RadioButton operationMode3020RadioButton;
 	private RadioButton operationModeOtherRadioButton;
+	private CheckBox shinkansenTweakCheckBox;
 
 	private GroupBox configFor4000Box;
 	private RadioButton configFor4000NoHoldingRadioButton;
@@ -79,6 +80,7 @@ class TrainConvConnector: Form
 	private static readonly string OperationMode4000Value = "4000";
 	private static readonly string OperationMode3020Value = "3020";
 	private static readonly string OperationModeOtherValue = "Other";
+	private static readonly string ShinkansenTweakValueName = "ShinkansenTweak";
 
 	private static readonly string ConfigFor4000ValueName = "4000Mode";
 	private static readonly string ConfigFor4000NoHoldingValue = "NoHolding";
@@ -142,6 +144,15 @@ class TrainConvConnector: Form
 		return radioButton;
 	}
 
+	private CheckBox AddCheckBox(Control parent, float x, float y, bool useMenuOffset = false)
+	{
+		CheckBox checkBox = new CheckBox();
+		checkBox.AutoSize = true;
+		checkBox.Location = GetGridPoint(x, y, useMenuOffset);
+		if (parent != null) parent.Controls.Add(checkBox);
+		return checkBox;
+	}
+
 	private void SetControlTexts()
 	{
 		denConvStatusBox.Text = uiText.DenConvStatus;
@@ -168,6 +179,7 @@ class TrainConvConnector: Form
 		operationMode4000RadioButton.Text = uiText.OperationMode4000Name;
 		operationMode3020RadioButton.Text = uiText.OperationMode3020Name;
 		operationModeOtherRadioButton.Text = uiText.OperationModeOtherName;
+		shinkansenTweakCheckBox.Text = uiText.ShinkansenTweakName;
 
 		configFor4000Box.Text = uiText.ConfigFor4000;
 		configFor4000NoHoldingRadioButton.Text = uiText.ConfigFor4000NoHolding;
@@ -274,6 +286,7 @@ class TrainConvConnector: Form
 		operationMode4000RadioButton = AddRadioButton(operationModeBox, col1x, 2);
 		operationMode3020RadioButton = AddRadioButton(operationModeBox, 8, 2);
 		operationModeOtherRadioButton = AddRadioButton(operationModeBox, 14, 2);
+		shinkansenTweakCheckBox = AddCheckBox(operationModeBox, col3x, 1);
 
 		const float rightBoxX = leftBoxWidth + 1, rightBoxWidth = 15.5f;
 		configFor4000Box = AddGroupBox(this, rightBoxX, 0.5f, rightBoxWidth, 3.5f, true);
@@ -332,6 +345,12 @@ class TrainConvConnector: Form
 			else
 			{
 				operationModeAutoRadioButton.Checked = true;
+			}
+
+			object shinkansenTweak = regKey.GetValue(ShinkansenTweakValueName);
+			if (shinkansenTweak != null && !shinkansenTweak.Equals(0))
+			{
+				shinkansenTweakCheckBox.Checked = true;
 			}
 
 			object configFor4000 = regKey.GetValue(ConfigFor4000ValueName);
@@ -417,6 +436,7 @@ class TrainConvConnector: Form
 		operationMode4000RadioButton.Click += OperationModeChangeHandler;
 		operationMode3020RadioButton.Click += OperationModeChangeHandler;
 		operationModeOtherRadioButton.Click += OperationModeChangeHandler;
+		shinkansenTweakCheckBox.Click += ShinkansenTweakChangeHandler;
 		configFor4000NoHoldingRadioButton.Click += ConfigFor4000ChangeHandler;
 		configFor4000UseHoldingRadioButton.Click += ConfigFor4000ChangeHandler;
 		configFor3020NoHolding8RadioButton.Click += ConfigFor3020ChangeHandler;
@@ -474,6 +494,12 @@ class TrainConvConnector: Form
 		else if (sender == operationModeOtherRadioButton) newMode = OperationModeOtherValue;
 		else return;
 		SetRegValueAndIgnoreExceptions(OperationModeValueName, newMode);
+	}
+
+	private void ShinkansenTweakChangeHandler(object sender, EventArgs e)
+	{
+		int newValue = shinkansenTweakCheckBox.Checked ? 1 : 0;
+		SetRegValueAndIgnoreExceptions(ShinkansenTweakValueName, newValue);
 	}
 
 	private void ConfigFor4000ChangeHandler(object sender, EventArgs e)
@@ -576,7 +602,7 @@ class TrainConvConnector: Form
 	private void ConversionTimerTickHandler(object sender, EventArgs e)
 	{
 		// 電車でＧｏ！コントローラー変換器から情報を取得する
-		DenConvCommunicator.PowerAndBrake pb = DenConvCommunicator.GetPowerAndBrake();
+		DenConvCommunicator.PowerAndBrake pb = DenConvCommunicator.GetPowerAndBrake(shinkansenTweakCheckBox.Checked);
 		denConvPowerValueLabel.Text = string.Format("P{0}", pb.Power);
 		denConvBrakeValueLabel.Text = pb.Brake == 0 ?
 			string.Format("{0} (0)", uiText.DenConvBrakeRelease) :
