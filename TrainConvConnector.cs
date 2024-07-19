@@ -642,10 +642,29 @@ class TrainConvConnector: Form
 		DenConvCommunicator.SetDistance(distance);
 		DenConvCommunicator.SetSpeed(speed);
 		DenConvCommunicator.SetATCActive(inGame);
-		// TODO: ATC変換元の設定を反映する
-		DenConvCommunicator.SetATC(atsValue);
-		denConvATCValueLabel.Text = atsValue >= 0 ? atsValue.ToString() : "-";
-		denConvATCNoticeValueLabel.Text = "-";
+		float atcValue = -1, atcNoticeValue = -1;
+		if (configForATCATSRadioButton.Checked)
+		{
+			if (atsValue == 112) atcValue = 110;
+			else if (atsValue == 300) atcValue = -1;
+			else atcValue = atsValue;
+		}
+		else if (configForATCRawATSRadioButton.Checked)
+		{
+			atcValue = atsValue;
+		}
+		else if (configForATCSpeedLimitRadioButton.Checked)
+		{
+			atcValue = speedLimit;
+			atcNoticeValue = speedLimitNotice;
+		}
+		else if (configForATCSpeedLimitWithoutNoticeRadioButton.Checked)
+		{
+			atcValue = speedLimit;
+		}
+		DenConvCommunicator.SetATC(atcValue, atcNoticeValue);
+		denConvATCValueLabel.Text = atcValue >= 0 ? atcValue.ToString() : "-";
+		denConvATCNoticeValueLabel.Text = atcNoticeValue >= 0 ? atcNoticeValue.ToString() : "-";
 
 		// マスコンとブレーキの変換を行い、TRAIN CREW に伝える
 		// TODO: 車種の設定を反映する
