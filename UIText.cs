@@ -10,6 +10,8 @@ abstract class UIText
 	public abstract string TrainCrewStatus { get; }
 	public abstract string TrainCrewPowerName { get; }
 	public abstract string TrainCrewBrakeName { get; }
+	public abstract string TrainCrewBrakeRelease { get; }
+	public abstract string TrainCrewBrakeHolding { get; }
 	public abstract string TrainCrewDoorCloseName { get; }
 	public abstract string TrainCrewDoorCloseTrue { get; }
 	public abstract string TrainCrewDoorCloseFalse { get; }

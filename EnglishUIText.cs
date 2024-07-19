@@ -10,6 +10,8 @@ class EnglishUIText: UIText
 	public override string TrainCrewStatus { get { return "TRAIN CREW Status"; }}
 	public override string TrainCrewPowerName { get { return "Power"; }}
 	public override string TrainCrewBrakeName { get { return "Brake"; }}
+	public override string TrainCrewBrakeRelease { get { return "Release"; }}
+	public override string TrainCrewBrakeHolding { get { return "Holding"; }}
 	public override string TrainCrewDoorCloseName { get { return "Door Closed"; }}
 	public override string TrainCrewDoorCloseTrue { get { return "Yes"; }}
 	public override string TrainCrewDoorCloseFalse { get { return "No"; }}

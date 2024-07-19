@@ -10,6 +10,8 @@ class JapaneseUIText: UIText
 	public override string TrainCrewStatus { get { return "TRAIN CREW の状態"; }}
 	public override string TrainCrewPowerName { get { return "マスコン"; }}
 	public override string TrainCrewBrakeName { get { return "ブレーキ"; }}
+	public override string TrainCrewBrakeRelease { get { return "ユルメ"; }}
+	public override string TrainCrewBrakeHolding { get { return "抑速"; }}
 	public override string TrainCrewDoorCloseName { get { return "戸閉"; }}
 	public override string TrainCrewDoorCloseTrue { get { return "点"; }}
 	public override string TrainCrewDoorCloseFalse { get { return "滅"; }}

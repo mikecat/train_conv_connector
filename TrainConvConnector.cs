@@ -106,6 +106,8 @@ class TrainConvConnector: Form
 	private bool trainCrewInputEnabled = false;
 	private bool prevInGame = false;
 	private int prevConvertedPower = -99, prevConvertedBrake = -99;
+	private float prevConvertedBrakePressure = -99;
+	private bool prevUseConvertedBrakePressure = false;
 
 	private Point GetGridPoint(float x, float y, bool useMenuOffset)
 	{
@@ -227,7 +229,7 @@ class TrainConvConnector: Form
 
 		SuspendLayout();
 
-		const float col1x = 0.5f, col2x = 5.5f, col3x = 10.5f, col4x = 15.5f;
+		const float col1x = 0.5f, col2x = 5.5f, col3x = 9.5f, col4x = 14.5f;
 		const float leftBoxWidth = 20;
 		denConvStatusBox = AddGroupBox(this, 0.5f, 0.5f, leftBoxWidth, 3.5f, true);
 		denConvPowerNameLabel = AddLabel(denConvStatusBox, col1x, 1);
@@ -281,12 +283,12 @@ class TrainConvConnector: Form
 
 		operationModeBox = AddGroupBox(this, 0.5f, 13.5f, leftBoxWidth, 3.5f, true);
 		operationModeAutoRadioButton = AddRadioButton(operationModeBox, col1x, 1);
-		operationModeAutoStatusLabel = AddLabel(operationModeBox, col2x, 1);
+		operationModeAutoStatusLabel = AddLabel(operationModeBox, 3.5f, 1);
 		operationModeAutoStatusLabel.Text = "(????)";
 		operationMode4000RadioButton = AddRadioButton(operationModeBox, col1x, 2);
 		operationMode3020RadioButton = AddRadioButton(operationModeBox, 8, 2);
 		operationModeOtherRadioButton = AddRadioButton(operationModeBox, 14, 2);
-		shinkansenTweakCheckBox = AddCheckBox(operationModeBox, col3x, 1);
+		shinkansenTweakCheckBox = AddCheckBox(operationModeBox, 11.5f, 1);
 
 		const float rightBoxX = leftBoxWidth + 1, rightBoxWidth = 15.5f;
 		configFor4000Box = AddGroupBox(this, rightBoxX, 0.5f, rightBoxWidth, 3.5f, true);
@@ -314,6 +316,10 @@ class TrainConvConnector: Form
 		ResumeLayout();
 		Load += LoadHandler;
 		Shown += ShownHandler;
+
+		// TODO: TrainCrewInput.SetBrakeSap() が使えるようになったら有効化 (無効化を解除) する
+		configFor3020NoHolding7RadioButton.Enabled = false;
+		configFor3020UseHolding7RadioButton.Enabled = false;
 	}
 
 	private void LoadHandler(object sender, EventArgs e)
@@ -624,6 +630,8 @@ class TrainConvConnector: Form
 			gameState.gameScreen == GameScreen.MainGame_Pause;
 		float bcPressure = carValid ? trainState.CarStates[0].BC_Press : -1;
 		float distance = trainState.nextUIDistance;
+		bool auto4000 = "4000".Equals(carModel) || "4000R".Equals(carModel);
+		bool auto3020 = "3020".Equals(carModel);
 
 		// 取得した情報を画面に表示する
 		trainCrewDoorCloseValueLabel.Text = doorClosed ? uiText.TrainCrewDoorCloseTrue : uiText.TrainCrewDoorCloseFalse;
@@ -635,6 +643,9 @@ class TrainConvConnector: Form
 		trainCrewInGameValueLabel.Text = inGame ? uiText.TrainCrewInGameTrue : uiText.TrainCrewInGameFalse;
 		trainCrewBCPressureValueLabel.Text = carValid ? bcPressure.ToString() : "-";
 		trainCrewDistanceValueLabel.Text = distance.ToString();
+		operationModeAutoStatusLabel.Text = string.Format("({0})",
+			auto4000 ? uiText.OperationMode4000Name :
+			(auto3020 ? uiText.OperationMode3020Name : uiText.OperationModeOtherName));
 
 		// 取得した情報を電車でＧｏ！コントローラー変換器に伝える
 		DenConvCommunicator.SetDoorClosed(doorClosed);
@@ -667,22 +678,116 @@ class TrainConvConnector: Form
 		denConvATCNoticeValueLabel.Text = atcNoticeValue >= 0 ? atcNoticeValue.ToString() : "-";
 
 		// マスコンとブレーキの変換を行い、TRAIN CREW に伝える
-		// TODO: 車種の設定を反映する
 		int convertedPower = 0, convertedBrake = 0;
+		float convertedBrakePressure = 0;
+		bool useConvertedBrakePressure = false;
+		string convertedBrakeName = "";
 		convertedPower = pb.Power > 5 ? 5 : pb.Power;
-		convertedBrake = pb.Brake >= 9 ? 8 : (pb.Brake == 8 ? 7 : pb.Brake);
-		if (convertedPower != prevConvertedPower || convertedBrake != prevConvertedBrake ||
+		if (operationMode4000RadioButton.Checked || (operationModeAutoRadioButton.Checked && auto4000))
+		{
+			if (configFor4000NoHoldingRadioButton.Checked)
+			{
+				if (pb.Brake <= 7) convertedBrake = pb.Brake;
+				else if (pb.Brake == 8) convertedBrake = 7;
+				else convertedBrake = 8;
+			}
+			else if (configFor4000UseHoldingRadioButton.Checked)
+			{
+				if (pb.Brake == 0) convertedBrake = 0;
+				else if (pb.Brake == 1)
+				{
+					if (convertedPower == 0) convertedPower = -1;
+					convertedBrake = 0;
+				}
+				else if (pb.Brake <= 8) convertedBrake = pb.Brake - 1;
+				else convertedBrake = 8;
+			}
+			convertedBrakeName =
+				convertedBrake == 0 ? string.Format("{0} (0)", uiText.TrainCrewBrakeRelease) :
+				convertedBrake < 8 ? string.Format("B{0} ({0})", convertedBrake) :
+				string.Format("EB ({0})", convertedBrake);
+		}
+		else if (operationMode3020RadioButton.Checked || (operationModeAutoRadioButton.Checked && auto3020))
+		{
+			if (configFor3020NoHolding8RadioButton.Checked)
+			{
+				if (pb.Brake <= 9) convertedBrake = pb.Brake;
+				else convertedBrake = 9;
+				convertedBrakeName =
+					convertedBrake == 0 ? string.Format("{0} (0)", uiText.TrainCrewBrakeRelease) :
+					convertedBrake <= 8 ? string.Format("B-{0}kPa ({1})", 50 * convertedBrake, convertedBrake) :
+					string.Format("EB ({0})", convertedBrake);
+			}
+			else
+			{
+				if (configFor3020NoHolding7RadioButton.Checked)
+				{
+					if (pb.Brake <= 7) convertedBrakePressure = 400.0f * pb.Brake / 7;
+					else if (pb.Brake == 8) convertedBrakePressure = 400;
+					else convertedBrakePressure = 410;
+				}
+				else if (configFor3020UseHolding7RadioButton.Checked)
+				{
+					if (pb.Brake == 0) convertedBrakePressure = 0;
+					else if (pb.Brake == 1)
+					{
+						if (convertedPower == 0) convertedPower = -1;
+						convertedBrakePressure = 0;
+					}
+					else if (pb.Brake <= 8) convertedBrakePressure = 400.0f * (pb.Brake - 1) / 7;
+					else convertedBrakePressure = 410;
+				}
+				useConvertedBrakePressure = true;
+				convertedBrakeName =
+					convertedBrakePressure == 0 ? string.Format("{0} (0 kPa)", uiText.TrainCrewBrakeRelease) :
+					convertedBrakePressure == 410 ? string.Format("EB ({0:#} kPa)", convertedBrakePressure) :
+					string.Format("{0:#} kPa", convertedBrakePressure);
+			}
+		}
+		else if (operationModeOtherRadioButton.Checked || operationModeAutoRadioButton.Checked)
+		{
+			if (configForOtherNoHoldingRadioButton.Checked)
+			{
+				if (pb.Brake == 0) convertedBrake = 0;
+				else if (pb.Brake <= 6) convertedBrake = pb.Brake + 1;
+				else if (pb.Brake == 7 || pb.Brake == 8) convertedBrake = 7;
+				else convertedBrake = 8;
+			}
+			else if (configForOtherUseHoldingRadioButton.Checked)
+			{
+				if (pb.Brake <= 7) convertedBrake = pb.Brake;
+				else if (pb.Brake == 8) convertedBrake = 7;
+				else convertedBrake = 8;
+			}
+			convertedBrakeName =
+				convertedBrake == 0 ? string.Format("{0} (0)", uiText.TrainCrewBrakeRelease) :
+				convertedBrake == 1 ? string.Format("{0} (1)", uiText.TrainCrewBrakeHolding) :
+				convertedBrake < 8 ? string.Format("B{0} ({1})", convertedBrake - 1, convertedBrake) :
+				string.Format("EB ({0})", convertedBrake);
+		}
+		if (convertedPower != prevConvertedPower || useConvertedBrakePressure != prevUseConvertedBrakePressure ||
+			(useConvertedBrakePressure ? (convertedBrakePressure != prevConvertedBrakePressure) : (convertedBrake != prevConvertedBrake)) ||
 			(inGame && !prevInGame))
 		{
-			TrainCrewInput.SetNotch(convertedPower, convertedBrake);
+			if (useConvertedBrakePressure)
+			{
+				TrainCrewInput.SetPowerNotch(convertedPower);
+				// TODO: TrainCrewInput.SetBrakeSap() が使えるようになったらコメントアウトを解除する
+				// TrainCrewInput.SetBrakeSap(convertedBrakePressure);
+			}
+			else
+			{
+				TrainCrewInput.SetNotch(convertedPower, convertedBrake);
+			}
 		}
 		trainCrewPowerValueLabel.Text = convertedPower > 0 ? string.Format("P{0}", convertedPower) :
 			(convertedPower < 0 ? string.Format("HB{0}", -convertedPower) : "N");
-		// TODO: 車種に応じた表示を行う
-		trainCrewBrakeValueLabel.Text = convertedBrake.ToString();
+		trainCrewBrakeValueLabel.Text = convertedBrakeName;
 
 		prevConvertedPower = convertedPower;
 		prevConvertedBrake = convertedBrake;
+		prevConvertedBrakePressure = convertedBrakePressure;
+		prevUseConvertedBrakePressure = useConvertedBrakePressure;
 		prevInGame = inGame;
 	}
 }
