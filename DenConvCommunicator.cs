@@ -123,7 +123,7 @@ class DenConvCommunicator
 		else if (distance < -0.125) distanceToSend = 512;
 		else
 		{
-			distanceToSend = (uint)Round((distance + 0.25) * 4096);
+			distanceToSend = (uint)Math.Floor((distance + 0.25) * 4096);
 			if (distanceToSend < 512) distanceToSend = 512;
 			if (distanceToSend > 511 + 1024) distanceToSend = 511 + 1024;
 			distanceToSend %= 1024;
