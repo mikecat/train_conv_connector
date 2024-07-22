@@ -224,6 +224,7 @@ class TrainConvConnector: Form
 		this.Font = new Font("MS UI Gothic", 16, GraphicsUnit.Pixel);
 		this.FormBorderStyle = FormBorderStyle.FixedSingle;
 		this.MaximizeBox = false;
+		this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 		this.ClientSize = GetGridSize(37, 19);
 		this.Height += mainMenu.Height;
 
