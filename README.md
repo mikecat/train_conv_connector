@@ -42,3 +42,21 @@ TrainConvConnector is licensed under the MIT License.
 
 TrainCrewInput.dll (the library for communicating with TRAIN CREW) is created by 溝月レイル/Acty, and isn't licensed under the MIT License.
 Analyzation and modification of TrainCrewInput.dll are prohibited.
+
+## ビルド方法 / How to build
+
+Windows 環境では、以下の方法でビルドを行います。
+
+1. `make` コマンドを使えるようにする  
+   例えば [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) をインストールする
+2. C# コンパイラ `csc.exe` があるディレクトリにパスを通す  
+   例えば `C:\Windows\Microsoft.NET\Framework\v4.0.30319`
+3. `make` コマンドを実行する
+
+This is how to build this software on Windows.
+
+1. Make the `make` command available.  
+   For example, install [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm).
+2. Add the directory where the C# compiler `csc.exe` is to the PATH.  
+   For example, it may be at `C:\Windows\Microsoft.NET\Framework\v4.0.30319`.
+3. Run the `make` command.
