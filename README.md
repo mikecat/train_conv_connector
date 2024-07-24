@@ -31,7 +31,13 @@ While TRAIN CREW can be controlled via the keyboard output function of DenConv, 
 
 ## スクリーンショット / Screenshots
 
-TBD
+### 日本語
+
+![日本語版スクリーンショット](TrainConvConnector_ss.png)
+
+### English
+
+![English version screenshot](TrainConvConnector_ss_en.png)
 
 ## ライセンス / License
 
