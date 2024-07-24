@@ -17,7 +17,7 @@ class EnglishUIText: UIText
 	public override string TrainCrewDoorCloseFalse { get { return "No"; }}
 	public override string TrainCrewCarModelName { get { return "Car Model"; }}
 	public override string TrainCrewSpeedName { get { return "Speed"; }}
-	public override string TrainCrewSpeedLimitName { get { return "Speet Limit"; }}
+	public override string TrainCrewSpeedLimitName { get { return "Speed Limit"; }}
 	public override string TrainCrewSpeedLimitNoticeName { get { return "Limit Notice"; }}
 	public override string TrainCrewATSName { get { return "ATS"; }}
 	public override string TrainCrewInGameName { get { return "Playing?"; }}

@@ -25,7 +25,7 @@ Note: DenConv ver3.72 is not working well in developer's environment, so this so
 
 While TRAIN CREW can be controlled via the keyboard output function of DenConv, using this software has these merits:
 
-* We can controll trains without worrying about slippings of controll.
+* We can control trains without worrying about slipping of control.
 * Detailed conversions for each car models in TRAIN CREW are available.
 * Status of trains can be displayed on supported controllers while controlling trains.
 
