@@ -258,7 +258,7 @@ for example, when power and/or brake are changed via operations on TRAIN CREW.
 ## Related links
 
 * TrainConvConnector
-  * TBD (GitHubのURLを貼る)
+  * https://github.com/mikecat/train_conv_connector
 * TRAIN CREW
   * https://acty-soft.com/traincrew/
   * https://store.steampowered.com/app/1618290/TRAIN_CREW/

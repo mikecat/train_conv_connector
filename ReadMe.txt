@@ -258,7 +258,7 @@ TrainConvConnector 上の表示と TRAIN CREW 上の表示が一致しない可�
 ## 関連リンク
 
 * TrainConvConnector
-  * TBD (GitHubのURLを貼る)
+  * https://github.com/mikecat/train_conv_connector
 * TRAIN CREW
   * https://acty-soft.com/traincrew/
   * https://store.steampowered.com/app/1618290/TRAIN_CREW/
