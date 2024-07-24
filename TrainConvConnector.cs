@@ -220,7 +220,7 @@ class TrainConvConnector: Form
 		this.Controls.Add(mainMenu);
 		this.MainMenuStrip = mainMenu;
 
-		this.Text = "TrainConvConnector 0.1.0";
+		this.Text = "TrainConvConnector 1.0.0";
 		this.Font = new Font("MS UI Gothic", 16, GraphicsUnit.Pixel);
 		this.FormBorderStyle = FormBorderStyle.FixedSingle;
 		this.MaximizeBox = false;
