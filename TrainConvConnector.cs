@@ -317,10 +317,6 @@ class TrainConvConnector: Form
 		ResumeLayout();
 		Load += LoadHandler;
 		Shown += ShownHandler;
-
-		// TODO: TrainCrewInput.SetBrakeSap() が使えるようになったら有効化 (無効化を解除) する
-		configFor3020NoHolding7RadioButton.Enabled = false;
-		configFor3020UseHolding7RadioButton.Enabled = false;
 	}
 
 	private void LoadHandler(object sender, EventArgs e)
@@ -773,8 +769,7 @@ class TrainConvConnector: Form
 			if (useConvertedBrakePressure)
 			{
 				TrainCrewInput.SetPowerNotch(convertedPower);
-				// TODO: TrainCrewInput.SetBrakeSap() が使えるようになったらコメントアウトを解除する
-				// TrainCrewInput.SetBrakeSap(convertedBrakePressure);
+				TrainCrewInput.SetBrakeSAP(convertedBrakePressure);
 			}
 			else
 			{
