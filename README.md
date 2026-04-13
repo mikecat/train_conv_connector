@@ -3,8 +3,8 @@ TrainConvConnector
 
 ## 概要 / Overview
 
-[TRAIN CREW](https://acty-soft.com/traincrew/) と [電車でGo！コントローラー変換器](https://autotraintas.hariko.com/) を接続し、ツーハンドルなどの TRAIN CREW が公式で対応していないコントローラーで電車を運転できるようにします。  
-このソフトウェアは**非公式**であり、TRAIN CREW や電車でGo！コントローラー変換器の作者様とは関係ありません。
+[TRAIN CREW](https://acty-soft.com/traincrew/) と [電車でＧｏ！コントローラー変換器](https://autotraintas.hariko.com/) を接続し、ツーハンドルなどの TRAIN CREW が公式で対応していないコントローラーで電車を運転できるようにします。  
+このソフトウェアは**非公式**であり、TRAIN CREW や電車でＧｏ！コントローラー変換器の作者様とは関係ありません。
 
 This software relays between [TRAIN CREW](https://acty-soft.com/traincrew/) and [DenConv](https://autotraintas.hariko.com/) to enable you control trains via controllers that are not officially supported in TRAIN CREW, such as two-handle controllers.  
 This software is **unofficial**, and has no relationships with creators of TRAIN CREW and DenConv.
@@ -13,7 +13,7 @@ This software is **unofficial**, and has no relationships with creators of TRAIN
 
 ## 利点 / Merits
 
-電車でGo！コントローラー変換器のキーボード出力機能でも TRAIN CREW を操作することはできますが、本ソフトウェアを用いることで以下のような利点が得られます。
+電車でＧｏ！コントローラー変換器のキーボード出力機能でも TRAIN CREW を操作することはできますが、本ソフトウェアを用いることで以下のような利点が得られます。
 
 * 操作のズレの心配をせずに操作できる
 * TRAIN CREW の各車種に合わせた細かい変換ができる
