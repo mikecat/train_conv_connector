@@ -44,19 +44,19 @@ class DenConvCommunicator
 
 	public static bool Initialize()
 	{
-		if (IntPtr.Zero.Equals(mem))
+		if (mem == IntPtr.Zero)
 		{
 			mem = VirtualAlloc(new IntPtr(0x400000), new IntPtr(0x1000), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 		}
-		if (IntPtr.Zero.Equals(mem2))
+		if (mem2 == IntPtr.Zero)
 		{
 			mem2 = VirtualAlloc(new IntPtr(0x4ed000), new IntPtr(0x1000), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 		}
-		if (IntPtr.Zero.Equals(mem3))
+		if (mem3 == IntPtr.Zero)
 		{
 			mem3 = VirtualAlloc(new IntPtr(0x534000), new IntPtr(0x2000), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 		}
-		if (IntPtr.Zero.Equals(mem) || IntPtr.Zero.Equals(mem2) || IntPtr.Zero.Equals(mem3))
+		if (mem == IntPtr.Zero || mem2 == IntPtr.Zero || mem3 == IntPtr.Zero)
 		{
 			return false;
 		}

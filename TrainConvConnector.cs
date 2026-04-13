@@ -566,7 +566,7 @@ class TrainConvConnector: Form
 			return;
 		}
 		hBeaconWnd = BeaconWindow.CreateBeaconWindow(this.Handle);
-		if (IntPtr.Zero.Equals(hBeaconWnd))
+		if (hBeaconWnd == IntPtr.Zero)
 		{
 			MessageBox.Show(
 				uiText.BeaconWindowCreationFailed,
@@ -631,8 +631,8 @@ class TrainConvConnector: Form
 			gameState.gameScreen == GameScreen.MainGame_Pause;
 		float bcPressure = carValid ? trainState.CarStates[0].BC_Press : -1;
 		float distance = trainState.nextUIDistance;
-		bool auto4000 = "4000".Equals(carModel) || "4000R".Equals(carModel);
-		bool auto3020 = "3020".Equals(carModel);
+		bool auto4000 = carModel == "4000" || carModel == "4000R";
+		bool auto3020 = carModel == "3020";
 
 		// 取得した情報を画面に表示する
 		trainCrewDoorCloseValueLabel.Text = doorClosed ? uiText.TrainCrewDoorCloseTrue : uiText.TrainCrewDoorCloseFalse;
