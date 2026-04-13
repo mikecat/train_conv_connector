@@ -9,10 +9,6 @@ such as two-handle controllers.
 
 This software is unofficial, and has no relationships with creators of TRAIN CREW and DenConv.
 
-Note:
-DenConv ver3.72 is not working well in developer's environment,
-so this software is not tested with the version. I recommend using ver3.70.
-
 ## Merits
 
 While TRAIN CREW can be controlled via the keyboard output function of DenConv,
@@ -141,7 +137,7 @@ When "Auto" is selected, the operation mode is automatically set
 according to the information of current car model.
 The mode to be used is displayed on the right of the "Auto".
 
-When "4000 / 4000R", "3020", or "Other" are selected, the mode for
+When "4000 / 4000R", "3020 / 3000", or "Other" are selected, the mode for
 selected car model is used regardless of the information of current car model.
 These choice may be helpful when driving new car models
 that are not supported by TrainConvConnector.
@@ -155,6 +151,8 @@ When controllers for Shinkansen are used, DenConv reports B6 as B7, and B7 as B8
 
 When "Tweak for Shinkansen" is enabled, the inverse of this conversion is performed
 to receive as-is input of B1 to B7.
+
+This mode may also be useful with Px-B7 cassettes for Multi Train Controller.
 
 ### Configuration for 4000 / 4000R
 
@@ -173,9 +171,9 @@ Also they have 9-step brakes: Release, B1 to B7, and EB.
   Input B2 to B8 are assigned to output B1 to B7.
   Also, when the input is brake B1 and power P0, HB1 is outputted for power.
 
-### Configuration for 3020
+### Configuration for 3020 / 3000
 
-Configure conversion for car model 3020.
+Configure conversion for car model 3020 and 3000.
 This model has 3-step holding brake on the power handle.
 The brake is specified as release, EB, or a numeric value from 0 to 400 [kPa].
 Also 8 steps from B1 to B8 can be used instead of the numeric values.
@@ -190,15 +188,11 @@ Also 8 steps from B1 to B8 can be used instead of the numeric values.
   Input B8 is assigned to output 400 [kPa].
   This mode should enable you to drive this model like other models with 7-step brakes.
 
-  Note: This mode is currently unavailable due to a problem in the API to set the pressure.
-
 * B1→Holding 1, B2～B8→0～400kPa
 
   Input B1 is assigned to output Release.
   Input B2 to B8 are assigned to output 0 to 400 [kPa], evenly divided.
   Also, when the input is brake B1 and power P0, HB1 is outputted for power.
-
-  Note: This mode is currently unavailable due to a problem in the API to set the pressure.
 
 ### Configuration for other models
 
@@ -264,14 +258,13 @@ for example, when power and/or brake are changed via operations on TRAIN CREW.
   * https://store.steampowered.com/app/1618290/TRAIN_CREW/
 * DenConv
   * https://autotraintas.hariko.com/
-  * ver3.70 archive: https://web.archive.org/web/20240529001140/https://autotraintas.hariko.com/
 
 ## License
 
 TrainConvConnector is licensed under the MIT License.
 
 ```
-Copyright (c) 2024 みけCAT
+Copyright (c) 2024,2026 みけCAT
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
