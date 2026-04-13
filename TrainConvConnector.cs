@@ -2,6 +2,7 @@ using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using TrainCrew;
 
@@ -207,6 +208,19 @@ class TrainConvConnector: Form
 
 	public TrainConvConnector()
 	{
+		AssemblyName assemblyName = Assembly.GetExecutingAssembly().GetName();
+		Version assemblyVersion = assemblyName.Version;
+		string versionString = "";
+		if (assemblyVersion != null)
+		{
+			versionString = string.Format(
+				" {0}.{1}.{2}",
+				assemblyVersion.Major,
+				assemblyVersion.Minor,
+				assemblyVersion.Build
+			);
+		}
+
 		mainMenu = new MenuStrip();
 		languageMenu = new ToolStripMenuItem();
 		languageMenu.Text = "言語 / Language (&L)";
@@ -220,7 +234,7 @@ class TrainConvConnector: Form
 		this.Controls.Add(mainMenu);
 		this.MainMenuStrip = mainMenu;
 
-		this.Text = "TrainConvConnector 1.0.0";
+		this.Text = "TrainConvConnector" + versionString;
 		this.Font = new Font("MS UI Gothic", 16, GraphicsUnit.Pixel);
 		this.FormBorderStyle = FormBorderStyle.FixedSingle;
 		this.MaximizeBox = false;
