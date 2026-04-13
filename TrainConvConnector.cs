@@ -628,7 +628,7 @@ class TrainConvConnector: Form
 		float bcPressure = carValid ? trainState.CarStates[0].BC_Press : -1;
 		float distance = trainState.nextUIDistance;
 		bool auto4000 = carModel == "4000" || carModel == "4000R";
-		bool auto3020 = carModel == "3020";
+		bool auto3020 = carModel == "3020" || carModel == "3000";
 
 		// 取得した情報を画面に表示する
 		trainCrewDoorCloseValueLabel.Text = doorClosed ? uiText.TrainCrewDoorCloseTrue : uiText.TrainCrewDoorCloseFalse;

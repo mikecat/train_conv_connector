@@ -29,7 +29,7 @@ class JapaneseUIText: UIText
 	public override string OperationMode { get { return "動作モード"; }}
 	public override string OperationModeAutoName { get { return "自動"; }}
 	public override string OperationMode4000Name { get { return "4000 / 4000R"; }}
-	public override string OperationMode3020Name { get { return "3020"; }}
+	public override string OperationMode3020Name { get { return "3020 / 3000"; }}
 	public override string OperationModeOtherName { get { return "その他"; }}
 	public override string ShinkansenTweakName { get { return "新幹線補正"; }}
 
@@ -37,7 +37,7 @@ class JapaneseUIText: UIText
 	public override string ConfigFor4000NoHolding { get { return "B1～B7→B1～B7、B8→B7"; }}
 	public override string ConfigFor4000UseHolding { get { return "B1→抑速1、B2～B8→B1～B7"; }}
 
-	public override string ConfigFor3020 { get { return "3020 設定"; }}
+	public override string ConfigFor3020 { get { return "3020 / 3000 設定"; }}
 	public override string ConfigFor3020NoHolding8 { get { return "B1～B8→B1～B8"; }}
 	public override string ConfigFor3020NoHolding7 { get { return "B1～B7→0～400kPa、B8→400kPa"; }}
 	public override string ConfigFor3020UseHolding7 { get { return "B1→抑速1、B2～B8→0～400kPa"; }}
