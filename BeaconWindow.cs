@@ -67,7 +67,7 @@ class BeaconWindow
 
 	public static IntPtr CreateBeaconWindow(IntPtr hParentWnd)
 	{
-		string className = Encoding.Default.GetString(
+		string name = Encoding.Default.GetString(
 			Encoding.GetEncoding("shift_jis").GetBytes("電車でＧＯ！プロフェッショナル仕様")
 		);
 		IntPtr hModule = GetModuleHandle(IntPtr.Zero);
@@ -85,12 +85,12 @@ class BeaconWindow
 				hCursor = IntPtr.Zero,
 				hbrBackground = IntPtr.Zero,
 				lpszMenuName = null,
-				lpszClassName = className,
+				lpszClassName = name,
 				hIconSm = IntPtr.Zero,
 			};
 			wndClassAtom = RegisterClassEx(ref wcx);
 		}
 		if (wndClassAtom == 0) return IntPtr.Zero;
-		return CreateWindowEx(0, className, "", 0, 0, 0, 0, 0, hParentWnd, IntPtr.Zero, hModule, IntPtr.Zero);
+		return CreateWindowEx(0, name, name, 0, 0, 0, 0, 0, hParentWnd, IntPtr.Zero, hModule, IntPtr.Zero);
 	}
 }
