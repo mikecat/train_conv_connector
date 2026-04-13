@@ -1,7 +1,7 @@
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
 [assembly: AssemblyProduct("TrainConvConnector")]
 [assembly: AssemblyTitle("TRAIN CREWと電車でＧｏ！コントローラー変換器の橋渡し役")]
 [assembly: AssemblyCompany("みけCAT")]
-[assembly: AssemblyCopyright("Copyright (c) 2024 みけCAT")]
+[assembly: AssemblyCopyright("Copyright (c) 2024,2026 みけCAT")]
